@@ -1,3 +1,5 @@
+import 'dist/apps/shapes-canvas/main.js';
+
 import { useEffect, useRef } from "react";
 import { v4 as uuidv4 } from 'uuid';
 
@@ -15,8 +17,6 @@ type CustomElement = {
 const WcDrowWrapper = (props:TWcDrowWrapper ) => {  
     const updateListItem = usePictureAnaliticsStore(state => state.updateListItem);
     const uid = uuidv4();
-
-    console.log('WcDrowWrapper', props);
     const {data} = props;
     const elementRef = useRef<CustomElement | null>(null);
 

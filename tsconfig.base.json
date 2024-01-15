@@ -17,7 +17,8 @@
     "paths": {
       "@react-canvas/canvas-element": ["canvas-element/src/index.ts"],
       "@react-canvas/models": ["models/src/index.ts"],
-      "@react-canvas/shapes-canvas": ["shapes-canvas/index.ts"]
+      "@react-canvas/shapes-canvas": ["shapes-canvas/index.ts"],
+      "@lib-dist/*": ["dist/index.ts"],
     }
   },
   "exclude": ["node_modules", "tmp"]

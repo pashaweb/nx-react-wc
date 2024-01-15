@@ -1,6 +1,5 @@
 import { StrictMode } from 'react';
 import * as ReactDOM from 'react-dom/client'
-import 'dist/canvas-element/index.mjs'
 import { AriaAttributes, DOMAttributes } from "react";
 import App from './app/app';
 declare global {

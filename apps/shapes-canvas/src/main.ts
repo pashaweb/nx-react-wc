@@ -11,14 +11,17 @@ type OffsetValues = {
 @customElement('my-element')
 export class MyElement extends LitElement {
 
+  @property({type: String, attribute: 'data-uid'})
+  uid:string = 'my-element';
+
   @property()
   canvas: HTMLCanvasElement | undefined;
 
   @property()
   ctx: CanvasRenderingContext2D | undefined;
 
-  @property({ type: Object, attribute: 'picture-anlytics'})
-  pictureAnlytics: TpictureAnlytics;
+  @property({ type: Object, attribute: 'picture-anlytics' })
+  pictureAnlytics!: TpictureAnlytics;
 
   @property()
   offsetValues: OffsetValues = { offsetX: 0, offsetY: 0 };
@@ -42,11 +45,13 @@ export class MyElement extends LitElement {
   }
 
   drowBackgroundImg(url: string) {
-    this.canvas.style.backgroundImage = `url(${url})`;
+    if (this.canvas) {
+      this.canvas.style.backgroundImage = `url(${url})`;
+    }
   }
 
   calculateMousePosition(e: MouseEvent) {
-    const { offsetX, offsetY } = this.offsetValues;
+    const { offsetX, offsetY } = this.offsetValues = {... this.calulateCanvasOffset()};
     const x = e.clientX - offsetX;
     const y = e.clientY - offsetY;
     return { x, y };
@@ -78,12 +83,11 @@ export class MyElement extends LitElement {
     const { x, y } = this.calculateMousePosition(e);
     if(this.drugSape) {
       const shape = this.pictureAnlytics.shapes.find(shape => shape.id === this.pictureAnlytics.selectedShapeId);
-      if(shape.type === 'rectangele') {
+      if(shape && shape.type === 'rectangele') {
         shape.x = x - shape.width / 2;
         shape.y = y - shape.height / 2;
-
       }
-      if(shape.type === 'circle') {
+      if(shape && shape.type === 'circle') {
         shape.x = x;
         shape.y = y;
       }
@@ -91,10 +95,12 @@ export class MyElement extends LitElement {
     } 
   };
 
-  onMouseUp = (e: MouseEvent) => {
+  onMouseUp = () => {
+    
     if(this.drugSape) {
-      console.log('onMouseUp',this.pictureAnlytics.shapes );
-      this.dispatchEvent(new CustomEvent('update-picture-anlytics', {
+      console.log('onMouseUp', `update-picture-anlytics-${this.uid}`,this.pictureAnlytics.shapes );
+
+      this.dispatchEvent(new CustomEvent(`update-picture-anlytics-${this.uid}`, {
         detail: this.pictureAnlytics,
         bubbles: true,
         composed: true
@@ -146,8 +152,8 @@ export class MyElement extends LitElement {
     }
   }
 
-  firstUpdated() {
-    this.canvas = this.shadowRoot?.getElementById('canvas') as HTMLCanvasElement;
+  override firstUpdated() {
+    this.canvas = this.shadowRoot?.getElementById(`canvas-${this.uid}`) as HTMLCanvasElement;
     this.ctx = this.canvas?.getContext('2d') as CanvasRenderingContext2D;
 
     console.log(this.canvas, "this.ctx");
@@ -157,7 +163,7 @@ export class MyElement extends LitElement {
     this.offsetValues = {... this.calulateCanvasOffset()};
   }
 
-  updated(changedProperties: { has: (arg0: string) => boolean; }) {
+  override updated(changedProperties: { has: (arg0: string) => boolean; }) {
     if(changedProperties.has('pictureAnlytics')) {
       this.drowAll();
     }
@@ -165,7 +171,6 @@ export class MyElement extends LitElement {
 
   ifCoordinatesInCircle(x: number, y: number, shape: { type: "circle"; } & Tcircle & Tposition & { id: number; color: string; selected: boolean; }) {
     const distance = Math.sqrt(Math.pow(x - shape.x, 2) + Math.pow(y - shape.y, 2));
-    console.log('ifCoordinatesInCircle', distance, shape.radius);
     return distance <= shape.radius;
   }
 
@@ -174,7 +179,6 @@ export class MyElement extends LitElement {
   }
 
   ifCoordinatesInShape(x: number, y: number, shape: TshapeItem) {
-    console.log('ifCoordinatesInShape', shape.id, shape.type,);
     switch (shape.type) {
       case 'circle':
         return this.ifCoordinatesInCircle(x, y, shape);
@@ -184,7 +188,7 @@ export class MyElement extends LitElement {
   }
 
 
-  render() {
+  override render() {
     return html`
     <style>
       :host {
@@ -198,7 +202,13 @@ export class MyElement extends LitElement {
     </style>
     
     <h4>Try to move shapes</h4>
-    <canvas id="canvas" width=300 height=300></canvas>
+    <canvas id="canvas-${this.uid}" width=300 height=300></canvas>
     `;
+  }
+}
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'my-element': MyElement;
   }
 }
