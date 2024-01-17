@@ -126,7 +126,7 @@ const withShapes: TpictureAnlytics[] = picks.map((pick) => {
   };
 });
 
-export const getDemo= ()=> withShapes;
+export const getDemo = ()=> withShapes;
 
 console.log(withShapes);
  

@@ -1,0 +1,68 @@
+{
+  "name": "wc-canvas-web",
+  "$schema": "../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "wc-canvas-web/src",
+  "tags": ["canvas", "webcomponet"],
+  "targets": {
+    "build": {
+      "executor": "@nx/vite:build",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "outputPath": "dist/wc-canvas-web"
+      },
+      "configurations": {
+        "development": {
+          "mode": "development"
+        },
+        "production": {
+          "mode": "production"
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/vite:dev-server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "wc-canvas-web:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "wc-canvas-web:build:development",
+          "hmr": true
+        },
+        "production": {
+          "buildTarget": "wc-canvas-web:build:production",
+          "hmr": false
+        }
+      }
+    },
+    "preview": {
+      "executor": "@nx/vite:preview-server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "wc-canvas-web:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "wc-canvas-web:build:development"
+        },
+        "production": {
+          "buildTarget": "wc-canvas-web:build:production"
+        }
+      }
+    },
+    "test": {
+      "executor": "@nx/vite:test",
+      "outputs": ["{options.reportsDirectory}"],
+      "options": {
+        "reportsDirectory": "../coverage/wc-canvas-web"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
+    }
+  }
+}

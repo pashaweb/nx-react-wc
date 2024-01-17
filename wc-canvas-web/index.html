@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>WcCanvasWeb</title>
+    <base href="/" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="stylesheet" href="/src/styles.css" />
+  </head>
+  <body>
+    <nx-react-wc-root title="12345"></nx-react-wc-root>
+    <script type="module" src="/src/main.ts" ></script>
+    <script> 
+    //console.log(window['appData'][0]);
+      const el = document.querySelector('nx-react-wc-root');
+      // el.addEventListener('titleChanged', (e) => {
+      //   console.log('titleChanged', e.detail);
+      // });
+      // setTimeout(() => {
+      //   console.log('setTimeout', el.getAttribute('title'));
+      //   el.setAttribute('title', 123)
+      //   el.title = '123';
+      // }, 2000);
+
+      // setTimeout(() => {
+       
+      //   el.setTest('123')
+      // }, 4000);
+      el.title = '123 SDG';
+      setTimeout(() => {
+        el.title = '123 SDG';
+        el.setStageData(window['appData'][0]);
+      }, 2000);
+      console.log(" asfs",window.appData);
+      //
+    </script>
+  </body>
+</html>

@@ -17,7 +17,13 @@ export type Tposition = {
   center: typeof CenterTypes[number];
 };
 
-export  type TshapeWithPosition<T> = T & Tposition;
+//export  type TshapeWithPosition<T> = T & Tposition;
+export  type TshapeWithPosition = {
+  type: 'circle'
+} & Tposition & Tcircle | {
+  type: 'rectangele'
+} & Tposition & Trectengele;
+
 
 export type TshapeCercle = {
   type : 'circle'
@@ -27,7 +33,9 @@ export type TshapeRectangele = {
   type : 'rectangele'
 } & Trectengele;
 
-export type TshapeItem = TshapeWithPosition<TshapeCercle | TshapeRectangele> &{
+export type Tshape = TshapeCercle | TshapeRectangele;
+
+export type TshapeItem = TshapeWithPosition & {
   id: number;
   color: string;
   selected: boolean;
