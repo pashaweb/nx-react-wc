@@ -1,0 +1,51 @@
+{
+  "name": "svg-stage",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "wc/svg-stage/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nx/esbuild:esbuild",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "outputPath": "dist/wc/svg-stage",
+        "format": ["esm"],
+        "bundle": true,
+        "thirdParty": true,
+        "main": "wc/svg-stage/src/main.ts",
+        "tsConfig": "wc/svg-stage/tsconfig.app.json",
+        "assets": ["wc/svg-stage/src/assets", "wc/svg-stage/index.html"],
+        "generatePackageJson": true,
+        "esbuildOptions": {
+          "sourcemap": true,
+          "outExtension": {
+            ".js": ".js"
+          }
+        }
+      }
+    },
+    "serve": {
+      "dependsOn": ["build"],
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "http-server dist/wc/svg-stage/",
+          "nx watch --projects=svg-stage --includeDependentProjects -- nx build svg-stage"
+        ]
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "wc/svg-stage/jest.config.ts"
+      }
+    }
+  },
+  "tags": []
+}
