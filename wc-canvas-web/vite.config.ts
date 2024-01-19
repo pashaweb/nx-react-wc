@@ -2,6 +2,7 @@
 import { defineConfig } from 'vite';
 
 import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
+import path from 'path';
 
 export default defineConfig({
   root: __dirname,
@@ -50,6 +51,15 @@ export default defineConfig({
     rollupOptions: {
       // External packages that should not be bundled into your library.
       external: [],
+    },
+  },
+
+  resolve: {
+    alias: {
+      '@wc/canvas-web': path.resolve(__dirname, './src'),
+      "@lib-dist/*": path.resolve(__dirname, '../dist'),
+      "@react-canvas/models": path.resolve(__dirname, '../models/src'),
+
     },
   },
 

@@ -4,6 +4,7 @@ import { create } from 'zustand'
 
 const initialState: TpictureAnlytics[] = getDemo();
 
+
 interface PicturesAnaliticsState {
     list: TpictureAnlytics[];
     selectedPictureId: number | null;
@@ -36,7 +37,9 @@ export const usePictureAnaliticsStore  = create<PicturesAnaliticsState>((set, ge
     removePicture: (id: number) => set({ list: get().list.filter(picture => picture.id !== id) }),
     updatePicture: (picture: TpictureAnlytics) => set({ list: get().list.map(p => p.id === picture.id ? picture : p) }),
     setList: (list: TpictureAnlytics[]) => set({ list }),
-    updateListItem: (item: TpictureAnlytics) => set({ 
-        list: get().list.map(p => p.id === item.id ? item : p) 
-    }),
+    updateListItem: (item: TpictureAnlytics) =>{
+        const list = get().list.map(p => p.id === item.id ? item : p);
+        console.log('updateListItem', item, list);
+        set({ list });
+    },
 }))

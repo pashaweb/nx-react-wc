@@ -21,7 +21,7 @@ export type Tposition = {
 export  type TshapeWithPosition = {
   type: 'circle'
 } & Tposition & Tcircle | {
-  type: 'rectangele'
+  type: 'rectangle'
 } & Tposition & Trectengele;
 
 
@@ -66,7 +66,7 @@ const shapeCercle: TshapeItem = {
 
 const shapeRectangele: TshapeItem = {
   id: 2,
-  type: 'rectangele',
+  type: 'rectangle',
   x: 200,
   y: 200,
   width: 100,

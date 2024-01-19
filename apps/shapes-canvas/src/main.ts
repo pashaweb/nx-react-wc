@@ -8,6 +8,7 @@ type OffsetValues = {
   offsetY: number;
 };
 
+
 @customElement('my-element')
 export class MyElement extends LitElement {
 
@@ -19,6 +20,8 @@ export class MyElement extends LitElement {
 
   @property()
   ctx: CanvasRenderingContext2D | undefined;
+
+  @property() svg:SVGSVGElement;
 
   @property({ type: Object, attribute: 'picture-anlytics' })
   pictureAnlytics!: TpictureAnlytics;
@@ -60,7 +63,7 @@ export class MyElement extends LitElement {
   onMouseDown = (e: MouseEvent) => {
     const { x, y } = this.calculateMousePosition(e);
     const shaps = [...this.pictureAnlytics.shapes];
-    shaps.reverse(); 
+    shaps.reverse();
     let selectedShapeId = null;
     for (let i = 0; i < shaps.length; i++) {
       const shape = shaps[i];
@@ -83,7 +86,7 @@ export class MyElement extends LitElement {
     const { x, y } = this.calculateMousePosition(e);
     if(this.drugSape) {
       const shape = this.pictureAnlytics.shapes.find(shape => shape.id === this.pictureAnlytics.selectedShapeId);
-      if(shape && shape.type === 'rectangele') {
+      if(shape && shape.type === 'rectangle') {
         shape.x = x - shape.width / 2;
         shape.y = y - shape.height / 2;
       }
@@ -92,11 +95,11 @@ export class MyElement extends LitElement {
         shape.y = y;
       }
       this.drowAll();
-    } 
+    }
   };
 
   onMouseUp = () => {
-    
+
     if(this.drugSape) {
       console.log('onMouseUp', `update-picture-anlytics-${this.uid}`,this.pictureAnlytics.shapes );
 
@@ -146,7 +149,7 @@ export class MyElement extends LitElement {
       case 'circle':
         this.drowCircle(shape);
         break;
-      case 'rectangele':
+      case 'rectangle':
         this.drowRectangele(shape);
         break;
     }
@@ -155,6 +158,11 @@ export class MyElement extends LitElement {
   override firstUpdated() {
     this.canvas = this.shadowRoot?.getElementById(`canvas-${this.uid}`) as HTMLCanvasElement;
     this.ctx = this.canvas?.getContext('2d') as CanvasRenderingContext2D;
+
+    this.svg = this.shadowRoot?.querySelector('svg') as SVGSVGElement;
+    this.svg.addEventListener('mousemove', this.svgMouseMove);
+    this.svg.querySelector('circle')?.addEventListener('mousedown', this.svgMouseDown);
+
 
     console.log(this.canvas, "this.ctx");
     this.canvas?.addEventListener('mousedown', this.onMouseDown);
@@ -182,9 +190,44 @@ export class MyElement extends LitElement {
     switch (shape.type) {
       case 'circle':
         return this.ifCoordinatesInCircle(x, y, shape);
-      case 'rectangele':
+      case 'rectangle':
         return this.ifCoordinatesInRectangele(x, y, shape);
     }
+  }
+
+  private currentSvgElement: SVGElement | null = null;
+
+
+
+  svgMouseDown = (e: MouseEvent) => {
+    this.currentSvgElement = e.target as SVGElement;
+    console.log('svgMouseDown', e.target);
+    //this.currentSvgElement = e.target as SVGElement;
+  }
+
+  mousePos(event: MouseEvent, svg: SVGSVGElement) {
+    let p = svg.createSVGPoint();
+    p.x = event.clientX;
+    p.y = event.clientY;
+    const matrix = svg.getScreenCTM();
+    if (matrix){
+      p = p.matrixTransform(matrix.inverse());
+    }
+
+    return {
+      x: p.x,
+      y: p.y
+    }
+  }
+
+  svgMouseMove = (e: MouseEvent) => {
+    if(this.currentSvgElement) {
+      const pos = this.mousePos(e, this.svg);
+      this.currentSvgElement.setAttribute('cx', pos.x.toString());
+      this.currentSvgElement.setAttribute('cy', pos.y.toString());
+    }
+    //console.log('svgMouseMove', e.target);
+    //this.currentSvgElement = e.target as SVGElement;
   }
 
 
@@ -200,8 +243,13 @@ export class MyElement extends LitElement {
         border: 1px solid black;
       }
     </style>
-    
-    <h4>Try to move shapes</h4>
+
+    <h4>Try to move shapes ${this.uid}</h4>
+    <svg width="300" height="500">
+    <rect x="50" y="50" width="200" height="200" style="fill:rgb(0,0,255);stroke-width:3;stroke:rgb(0,0,0)" />
+
+      <circle cx="150" cy="150" r="100" stroke="black" stroke-width="3" fill="red" />
+    </svg>
     <canvas id="canvas-${this.uid}" width=300 height=300></canvas>
     `;
   }

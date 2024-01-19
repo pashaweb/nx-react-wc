@@ -98,7 +98,7 @@ const getRandomeShape = (id: number, w: number, h: number): TshapeItem => {
         const {x, y, width, height} = getRectangleRandomePositionAndSize(w, h);
         return {
             id: id,
-            type: 'rectangele',
+            type: 'rectangle',
             x: x,
             y: y,
             width: width,
@@ -129,4 +129,3 @@ const withShapes: TpictureAnlytics[] = picks.map((pick) => {
 export const getDemo = ()=> withShapes;
 
 console.log(withShapes);
- 

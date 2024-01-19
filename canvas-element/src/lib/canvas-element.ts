@@ -8,8 +8,8 @@ type OffsetValues = {
   offsetY: number;
 };
 
-@customElement('my-element')
-export class MyElement extends LitElement {
+@customElement('stage-svg')
+export class StageSvg extends LitElement {
 
   @property({type: String, attribute: 'data-uid'})
   uid:string = 'my-element';
@@ -60,7 +60,7 @@ export class MyElement extends LitElement {
   onMouseDown = (e: MouseEvent) => {
     const { x, y } = this.calculateMousePosition(e);
     const shaps = [...this.pictureAnlytics.shapes];
-    shaps.reverse(); 
+    shaps.reverse();
     let selectedShapeId = null;
     for (let i = 0; i < shaps.length; i++) {
       const shape = shaps[i];
@@ -83,7 +83,7 @@ export class MyElement extends LitElement {
     const { x, y } = this.calculateMousePosition(e);
     if(this.drugSape) {
       const shape = this.pictureAnlytics.shapes.find(shape => shape.id === this.pictureAnlytics.selectedShapeId);
-      if(shape && shape.type === 'rectangele') {
+      if(shape && shape.type === 'rectangle') {
         shape.x = x - shape.width / 2;
         shape.y = y - shape.height / 2;
       }
@@ -92,13 +92,13 @@ export class MyElement extends LitElement {
         shape.y = y;
       }
       this.drowAll();
-    } 
+    }
   };
 
   onMouseUp = () => {
-    
+
     if(this.drugSape) {
-      console.log('onMouseUp', `update-picture-anlytics-${this.uid}`,this.pictureAnlytics.shapes );
+      //console.log('onMouseUp', `update-picture-anlytics-${this.uid}`,this.pictureAnlytics.shapes );
 
       this.dispatchEvent(new CustomEvent(`update-picture-anlytics-${this.uid}`, {
         detail: this.pictureAnlytics,
@@ -146,7 +146,7 @@ export class MyElement extends LitElement {
       case 'circle':
         this.drowCircle(shape);
         break;
-      case 'rectangele':
+      case 'rectangle':
         this.drowRectangele(shape);
         break;
     }
@@ -184,7 +184,7 @@ export class MyElement extends LitElement {
     switch (shape.type) {
       case 'circle':
         return this.ifCoordinatesInCircle(x, y, shape);
-      case 'rectangele':
+      case 'rectangle':
         return this.ifCoordinatesInRectangele(x, y, shape);
     }
   }
@@ -202,8 +202,8 @@ export class MyElement extends LitElement {
         border: 1px solid black;
       }
     </style>
-    
-    <h4>Try to move shapes</h4>
+
+    <h4>Try to move shapes ${this.uid}</h4>
     <canvas id="canvas-${this.uid}" width=300 height=300></canvas>
     `;
   }
@@ -211,6 +211,6 @@ export class MyElement extends LitElement {
 
 declare global {
   interface HTMLElementTagNameMap {
-    'my-element': MyElement;
+    'stage-svg': StageSvg;
   }
 }

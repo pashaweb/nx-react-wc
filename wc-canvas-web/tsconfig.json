@@ -16,7 +16,12 @@
     "noUnusedParameters": true,
     "noImplicitReturns": true,
     "skipLibCheck": true,
-    "types": ["vite/client"]
+    "types": ["vite/client"],
+    "paths": {
+      "@wc-canvas/*": ["src/*"],
+      "@lib-dist/*": ["../dist/index.ts"],
+      "@react-canvas/models": ["../models/src/index.ts"]
+    }
   },
   "include": ["src"],
   "references": [

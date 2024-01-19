@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { usePictureAnaliticsStore } from "../stores/userePicturesList";
 import WcDrowWrapper from "./WcDrowWrapper";
 
@@ -5,6 +6,10 @@ import WcDrowWrapper from "./WcDrowWrapper";
 
 export const WcList = () => {
     const list = usePictureAnaliticsStore(state => state.list);
+    const [list2, setList2] = useState(list);
+    useEffect(() => {
+      setList2(list)
+    },  [list]);
   return (
     <>
         <h1>WcList</h1>
