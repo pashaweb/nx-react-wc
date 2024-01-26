@@ -60,7 +60,7 @@ export class MyElement extends LitElement {
   onMouseDown = (e: MouseEvent) => {
     const { x, y } = this.calculateMousePosition(e);
     const shaps = [...this.pictureAnlytics.shapes];
-    shaps.reverse(); 
+    shaps.reverse();
     let selectedShapeId = null;
     for (let i = 0; i < shaps.length; i++) {
       const shape = shaps[i];
@@ -83,7 +83,7 @@ export class MyElement extends LitElement {
     const { x, y } = this.calculateMousePosition(e);
     if(this.drugSape) {
       const shape = this.pictureAnlytics.shapes.find(shape => shape.id === this.pictureAnlytics.selectedShapeId);
-      if(shape && shape.type === 'rectangele') {
+      if(shape && shape.type === 'rectangle') {
         shape.x = x - shape.width / 2;
         shape.y = y - shape.height / 2;
       }
@@ -92,11 +92,11 @@ export class MyElement extends LitElement {
         shape.y = y;
       }
       this.drowAll();
-    } 
+    }
   };
 
   onMouseUp = () => {
-    
+
     if(this.drugSape) {
       console.log('onMouseUp', `update-picture-anlytics-${this.uid}`,this.pictureAnlytics.shapes );
 
@@ -118,7 +118,7 @@ export class MyElement extends LitElement {
   }
 
 
-  drowRectangele(shape: { type: "rectangele"; } & Trectengele & Tposition & { id: number; color: string; selected: boolean; }) {
+  drowrectangle(shape: { type: "rectangle"; } & Trectengele & Tposition & { id: number; color: string; selected: boolean; }) {
     if (this.ctx) {
       this.ctx.fillStyle = shape.color;
       this.ctx.strokeStyle = 'black';
@@ -146,8 +146,8 @@ export class MyElement extends LitElement {
       case 'circle':
         this.drowCircle(shape);
         break;
-      case 'rectangele':
-        this.drowRectangele(shape);
+      case 'rectangle':
+        this.drowrectangle(shape);
         break;
     }
   }
@@ -174,7 +174,7 @@ export class MyElement extends LitElement {
     return distance <= shape.radius;
   }
 
-  ifCoordinatesInRectangele(x: number, y: number, shape: { type: "rectangele"; } & Trectengele & Tposition & { id: number; color: string; selected: boolean; }) {
+  ifCoordinatesInrectangle(x: number, y: number, shape: { type: "rectangle"; } & Trectengele & Tposition & { id: number; color: string; selected: boolean; }) {
     return x >= shape.x && x <= shape.x + shape.width && y >= shape.y && y <= shape.y + shape.height;
   }
 
@@ -182,8 +182,8 @@ export class MyElement extends LitElement {
     switch (shape.type) {
       case 'circle':
         return this.ifCoordinatesInCircle(x, y, shape);
-      case 'rectangele':
-        return this.ifCoordinatesInRectangele(x, y, shape);
+      case 'rectangle':
+        return this.ifCoordinatesInrectangle(x, y, shape);
     }
   }
 
@@ -200,7 +200,7 @@ export class MyElement extends LitElement {
         border: 1px solid black;
       }
     </style>
-    
+
     <h4>Try to move shapes</h4>
     <canvas id="canvas-${this.uid}" width=300 height=300></canvas>
     `;

@@ -1,46 +1,48 @@
 export type Trectengele = {
   width: number;
   height: number;
-
 };
 
 export type Tcircle = {
   radius: number;
 };
 
-export const CenterTypes = ['center', 'left-top', 'right-top', 'left-bottom', 'right-bottom'] as const;
-export const ShapeTypes = ['circle', 'rectangele'] as const;
+export const CenterTypes = [
+  'center',
+  'left-top',
+  'right-top',
+  'left-bottom',
+  'right-bottom',
+] as const;
+export const ShapeTypes = ['circle', 'rectangle'] as const;
 
 export type Tposition = {
   x: number;
   y: number;
-  center: typeof CenterTypes[number];
+  center: (typeof CenterTypes)[number];
 };
 
 //export  type TshapeWithPosition<T> = T & Tposition;
-export  type TshapeWithPosition = {
-  type: 'circle'
-} & Tposition & Tcircle | {
-  type: 'rectangle'
-} & Tposition & Trectengele;
+type TRecWithPos = { type: 'rectangle' } & Trectengele & Tposition;
+type TCircleWithPos = { type: 'circle' } & Tcircle & Tposition;
 
+export type TshapeWithPosition = TRecWithPos | TCircleWithPos;
 
 export type TshapeCercle = {
-  type : 'circle'
+  type: 'circle';
 } & Tcircle;
 
-export type TshapeRectangele = {
-  type : 'rectangele'
+export type Tshaperectangle = {
+  type: 'rectangle';
 } & Trectengele;
 
-export type Tshape = TshapeCercle | TshapeRectangele;
+export type Tshape = TshapeCercle | Tshaperectangle;
 
 export type TshapeItem = TshapeWithPosition & {
   id: number;
   color: string;
   selected: boolean;
 };
-
 
 export type TpictureAnlytics = {
   id: number;
@@ -64,7 +66,7 @@ const shapeCercle: TshapeItem = {
   selected: false,
 };
 
-const shapeRectangele: TshapeItem = {
+const shaperectangle: TshapeItem = {
   id: 2,
   type: 'rectangle',
   x: 200,
@@ -76,12 +78,9 @@ const shapeRectangele: TshapeItem = {
   selected: false,
 };
 
-
-
 export function models(): string {
   console.log('models');
   console.log(shapeCercle);
-  console.log(shapeRectangele);
+  console.log(shaperectangle);
   return 'models';
 }
-

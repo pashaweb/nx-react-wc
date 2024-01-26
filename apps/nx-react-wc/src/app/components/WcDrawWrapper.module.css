@@ -1,0 +1,17 @@
+.svg-holder{
+  width: 100%;
+  display: flex;
+  justify-content: start;
+  align-items: flex-start;
+  width: 100%;
+  height: 100%;
+  flex-direction: row;
+  gap: 1rem;
+}
+.infoBox{
+  border: #2ba1f0 1px solid;
+  padding: 1rem;
+  border-radius: 1rem;
+  width: 100%;
+
+}

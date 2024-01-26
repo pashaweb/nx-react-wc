@@ -5,13 +5,13 @@ export const drowRectangle = (shape:TshapeItem) => {
       return null;
     }
     const { x, y, width, height, color } = shape;
-    const rectangele = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-    rectangele.setAttribute('x', x.toString());
-    rectangele.setAttribute('y', y.toString());
-    rectangele.setAttribute('width', width.toString());
-    rectangele.setAttribute('height', height.toString());
-    rectangele.setAttribute('fill', color);
-    return rectangele;
+    const rectangle = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+    rectangle.setAttribute('x', x.toString());
+    rectangle.setAttribute('y', y.toString());
+    rectangle.setAttribute('width', width.toString());
+    rectangle.setAttribute('height', height.toString());
+    rectangle.setAttribute('fill', color);
+    return rectangle;
   }
 
   export const drowCircle = (shape:TshapeItem) => {

@@ -9,17 +9,17 @@ type TSelectedShape = {
 
 
 export const drowRectangle = (shape:TshapeItem) => {
-  if(shape.type !== 'rectangele'){
+  if(shape.type !== 'rectangle'){
     return null;
   }
   const { x, y, width, height, color } = shape;
-  const rectangele = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-  rectangele.setAttribute('x', x.toString());
-  rectangele.setAttribute('y', y.toString());
-  rectangele.setAttribute('width', width.toString());
-  rectangele.setAttribute('height', height.toString());
-  rectangele.setAttribute('fill', color);
-  return rectangele;
+  const rectangle = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+  rectangle.setAttribute('x', x.toString());
+  rectangle.setAttribute('y', y.toString());
+  rectangle.setAttribute('width', width.toString());
+  rectangle.setAttribute('height', height.toString());
+  rectangle.setAttribute('fill', color);
+  return rectangle;
 }
 
 export const drowCircle = (shape:TshapeItem) => {
@@ -45,7 +45,7 @@ export const createIamgeElement = (img: { url: string; width: number; height: nu
 
 export const clearSvg = (svg: SVGSVGElement) => {
   const children = svg.children;
-  const childrenArr = Array.from(children); 
+  const childrenArr = Array.from(children);
   for(const child of childrenArr){
     child.replaceWith(child.cloneNode(false));
     child.remove();
@@ -93,7 +93,7 @@ export class AppElement extends HTMLElement {
       this.selectedShape.element = element;
     }
   }
-  
+
 
   public shadowRoot: ShadowRoot | null;
   constructor() {
@@ -119,7 +119,7 @@ export class AppElement extends HTMLElement {
 
   public setStageData(stageData: TpictureAnlytics) {
     console.log('setStageData', stageData);
-  
+
     if(this.svg){
       clearSvg(this.svg as SVGSVGElement);
     }
@@ -135,7 +135,7 @@ export class AppElement extends HTMLElement {
     let element
 
     switch (type) {
-      case 'rectangele':
+      case 'rectangle':
         element = drowRectangle(shape);
         break;
       case 'circle':
@@ -171,7 +171,7 @@ export class AppElement extends HTMLElement {
     }
   }
 
-  
+
 
   setBackGroundImage(img:{
     url:string;
@@ -194,19 +194,19 @@ export class AppElement extends HTMLElement {
     const { element,  shape} = moveObj;
     const { type } = shape;
 
-    type === 'rectangele' ? (x -= shape.width / 2) : (x );
-    type === 'rectangele' ? (y -= shape.height / 2) : (y);
+    type === 'rectangle' ? (x -= shape.width / 2) : (x );
+    type === 'rectangle' ? (y -= shape.height / 2) : (y);
     shape.x = x;
     shape.y = y;
     const xAttrKey = type === 'circle' ? 'cx' : 'x';
     const yAttrKey = type === 'circle' ? 'cy' : 'y';
-    
+
     element.setAttribute(xAttrKey, x.toString());
     element.setAttribute(yAttrKey, y.toString());
-  
+
     // const logShape = this.stageData?.shapes.find((s) => s.id === shape.id);
     // console.log('logShape', logShape);
- 
+
 
   }
 
@@ -250,13 +250,13 @@ export class AppElement extends HTMLElement {
     if (matrix){
       p = p.matrixTransform(matrix.inverse());
     }
-    
+
     return {
       x: p.x,
       y: p.y
     }
   }
-    
+
 
   private cssTempleate = `
     <style>
@@ -298,7 +298,7 @@ export class AppElement extends HTMLElement {
         </div>
       </div>
     `;
-    
+
   }
 }
 customElements.define('nx-react-wc-root', AppElement);

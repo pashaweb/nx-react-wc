@@ -121,7 +121,7 @@ export class MyElement extends LitElement {
   }
 
 
-  drowRectangele(shape: { type: "rectangele"; } & Trectengele & Tposition & { id: number; color: string; selected: boolean; }) {
+  drowrectangle(shape: { type: "rectangle"; } & Trectengele & Tposition & { id: number; color: string; selected: boolean; }) {
     if (this.ctx) {
       this.ctx.fillStyle = shape.color;
       this.ctx.strokeStyle = 'black';
@@ -150,7 +150,7 @@ export class MyElement extends LitElement {
         this.drowCircle(shape);
         break;
       case 'rectangle':
-        this.drowRectangele(shape);
+        this.drowrectangle(shape);
         break;
     }
   }
@@ -182,7 +182,7 @@ export class MyElement extends LitElement {
     return distance <= shape.radius;
   }
 
-  ifCoordinatesInRectangele(x: number, y: number, shape: { type: "rectangele"; } & Trectengele & Tposition & { id: number; color: string; selected: boolean; }) {
+  ifCoordinatesInrectangle(x: number, y: number, shape: { type: "rectangle"; } & Trectengele & Tposition & { id: number; color: string; selected: boolean; }) {
     return x >= shape.x && x <= shape.x + shape.width && y >= shape.y && y <= shape.y + shape.height;
   }
 
@@ -191,7 +191,7 @@ export class MyElement extends LitElement {
       case 'circle':
         return this.ifCoordinatesInCircle(x, y, shape);
       case 'rectangle':
-        return this.ifCoordinatesInRectangele(x, y, shape);
+        return this.ifCoordinatesInrectangle(x, y, shape);
     }
   }
 

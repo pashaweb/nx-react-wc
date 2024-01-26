@@ -1,3 +1,15 @@
 {
-    "testing.automaticallyOpenPeekView": "never"
+    "prettier-eslint-typescript.eslintConfig": {},
+    "prettier.jsxSingleQuote": true,
+    "prettier.withNodeModules": true,
+    "prettier.vueIndentScriptAndStyle": true,
+    "prettier.useTabs": true,
+    "prettier.singleQuote": true,
+    "prettier.singleAttributePerLine": true,
+    "vs-code-prettier-eslint.prettierLast": true,
+    "eslint.useESLintClass": true,
+    "eslint.lintTask.enable": true,
+    "eslint.run": "onSave",
+    "eslint.format.enable": true,
+    "eslint.runtime": ""
 }

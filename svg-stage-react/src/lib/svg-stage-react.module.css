@@ -1,0 +1,23 @@
+/*
+ * Replace this with your own classes
+ *
+ * e.g.
+ * .container {
+ * }
+*/
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+
+
+}
+
+.svg-stage {
+  background-color: var(--primary-600);
+  border: 4px solid #000;
+}
+

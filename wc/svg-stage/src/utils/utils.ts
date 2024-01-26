@@ -14,7 +14,7 @@ export const drawRectangle = (shape:TshapeItem) => {
     return rectangle;
   }
 
-  export const drawCircle = (shape:TshapeItem) => {
+  export const drowCircle = (shape:TshapeItem) => {
     if(shape.type !== 'circle'){
       return null;
     }
