@@ -1,12 +1,36 @@
+import { useCallback, useState } from 'react';
 import styles from './app.module.css';
 import WcDrawWrapper from './components/WcDrawWrapper';
-import { usePictureAnaliticsStore } from './stores/userePicturesList';
-import { TpictureAnlytics } from '@react-canvas/models';
-
+import { TpictureAnlytics, TshapeItem } from '@react-canvas/models';
+import { useStagesStore } from './stores/stagesStoreCreator';
 export type ShapesListProps = {
   item: TpictureAnlytics;
   onSelected: (shapeId: number) => void;
 };
+
+type shapesListItemProps = {
+  shape: TshapeItem;
+  onSelected: (shapeId: number) => void;
+};
+
+const ShapesListItem = (props: shapesListItemProps) => {
+  const { shape, onSelected } = props;
+  console.log("shapesListItem was rendered at", new Date().toLocaleTimeString());
+  return (
+    <li
+      key={shape.id}
+      onClick={() => onSelected(shape.id)}
+      className={
+        shape.selected
+          ? `${styles['list-item']} ${styles['list-item-selected']}`
+          : `${styles['list-item']}`
+      }
+    >
+      x:{shape.x} y:{shape.y} {shape.selected ? 'selected' : ''}
+    </li>
+  );
+};
+
 
 function ShapesList(props: ShapesListProps) {
   const { item, onSelected } = props;
@@ -15,12 +39,7 @@ function ShapesList(props: ShapesListProps) {
     <ul className={styles['list-item-shapes']}>
       {item.shapes.map((shape) => {
         return (
-          <li key={shape.id}>
-            <button onClick={() => onSelected(shape.id)}>
-              id: {shape.selected ? 1 : 0}, x: {Math.floor(shape.x)}, y:{' '}
-              {Math.floor(shape.y)}
-            </button>
-          </li>
+          <ShapesListItem key={shape.id} shape={shape} onSelected={onSelected} />
         );
       })}
     </ul>
@@ -28,49 +47,64 @@ function ShapesList(props: ShapesListProps) {
 }
 
 export function App() {
-  const list = usePictureAnaliticsStore((state) => state.list);
-  const selectPicture = usePictureAnaliticsStore(
-    (state) => state.setSelectedPictureId
-  );
-  const currentPicture = usePictureAnaliticsStore(
-    (state) => state.selectedPicture
-  );
-  const updateListItem = usePictureAnaliticsStore(
-    (state) => state.updateListItem
-  );
+
+  const [selectedStage, _setSelectedStage] = useState<TpictureAnlytics | null>(null);
+
+
+
+  const {
+    stages,
+    selectedStageId,
+    setSelectedStage,
+    updateStage
+  } = useStagesStore((state) => state);
+
+
 
   const isSelected = (id: number) => {
     let result = false;
-    if (!currentPicture) return result;
-    if (currentPicture?.id === id) {
+    if (!selectedStage) return result;
+    if (selectedStageId === id) {
       result = true;
     }
     return result;
   };
-  const handeleShapeClick = (id: number) => {
-    console.log('handeleShapeClick', id);
-    if (!currentPicture) return;
-    const newItem: TpictureAnlytics = { ...currentPicture };
+  const handeleShapeClick = useCallback(
+    (id: number) => {
+      console.log('handeleShapeClick', id);
+      if (!selectedStage) return;
+      const newItem: TpictureAnlytics = { ...selectedStage };
 
-    newItem.shapes.forEach((shape) => {
-      shape.selected = false;
-      if (shape.id === id) {
-        shape.selected = !shape.selected;
-      }
-    });
-    updateListItem(newItem);
-  };
+      newItem.shapes.forEach((shape) => {
+        shape.selected = false;
+        if (shape.id === id) {
+          shape.selected = !shape.selected;
+        }
+      })
+      updateStage(newItem);
+    }, [selectedStage, updateStage]
+  );
+
+  const handeleStageSelection = useCallback(
+    (id: number) => {
+      const stage = stages.find((item) => item.id === id);
+      if (!stage) return;
+      _setSelectedStage(stage);
+      setSelectedStage(id);
+    }, [setSelectedStage, stages]
+  );
+
   return (
     <>
       <h1>Welcome to nx-react-wc!</h1>
       <main className={styles.container}>
         <div>
           <ul className={styles.list}>
-            {list.map((item) => {
+            {stages.map((item) => {
               return (
                 <li
                   key={item.id}
-                  onClick={() => selectPicture(item.id)}
+                  onClick={() => handeleStageSelection(item.id)}
                   className={
                     isSelected(item.id)
                       ? `${styles['list-item']} ${styles['list-item-selected']}`
@@ -90,16 +124,10 @@ export function App() {
           </ul>
         </div>
 
-        <div>{currentPicture && <WcDrawWrapper data={currentPicture} />}</div>
+        <div>{selectedStage && <WcDrawWrapper data={selectedStage} uid={selectedStageId} />}</div>
       </main>
+
     </>
-
-    // <div>
-    //   <h1>Welcome to nx-react-wc!</h1>
-    //   <button onClick={handellClick}>randomize</button>
-    //   <WcDrowWrapper data={refData.current} />
-
-    // </div>
   );
 }
 

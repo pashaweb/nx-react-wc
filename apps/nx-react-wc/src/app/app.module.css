@@ -25,7 +25,7 @@ ul {
     .list-item-link {
       padding: 1rem;
       border-radius: 0.5rem;
-      background-color: var(--primary);
+      background-color: var(--primary-500);
       color: var(--light-100);
       display: flex;
       flex-direction: row;
@@ -60,13 +60,17 @@ ul {
   /*margin-left: var(--spacing-md);*/
 
 
-  li {
+  li.list-item {
     list-style: none;
     margin: var(--spacing-xs);
     padding: var(--spacing-md);
     border-radius: var(--spacing-md);
-    background-color: var(--success);
+    background-color: var(--outline);
   }
+  li.list-item-selected {
+    background-color: var(--primary-400);
+  }
+
 }
 
 

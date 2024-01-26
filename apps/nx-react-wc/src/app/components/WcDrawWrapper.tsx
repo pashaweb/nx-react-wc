@@ -6,7 +6,7 @@ import { TpictureAnlytics } from '@react-canvas/models';
 import React from 'react';
 import { useStagesStore } from '../stores/stagesStoreCreator';
 
-type TWcDrawWrapper = { data: TpictureAnlytics };
+type TWcDrawWrapper = { data?: TpictureAnlytics, uid: number | null };
 
 type CustomElement = {
   stageData: TpictureAnlytics;
@@ -16,8 +16,8 @@ type CustomElement = {
 // don't forget to include all dependencies here
 
 const WcDrawWrapper = (props: TWcDrawWrapper) => {
-  const { updateStage } = useStagesStore((state) => state);
-  const { data } = props;
+  const { stages, updateStage } = useStagesStore((state) => state);
+  const { data, uid } = props;
   const elementRef = useRef<CustomElement | null>(null);
 
   const setData = useCallback(
@@ -42,7 +42,8 @@ const WcDrawWrapper = (props: TWcDrawWrapper) => {
     console.log('WcDrawWrapper useEffect');
 
     function updateData() {
-      if (elementRef.current) {
+      if (elementRef.current && uid && stages) {
+        const data = stages.find((item) => item.id === uid);
         setData(data);
         elementRef.current.addEventListener(
           'stage-svg-update',
@@ -60,7 +61,7 @@ const WcDrawWrapper = (props: TWcDrawWrapper) => {
     }
 
     updateData();
-  }, [elementRef, data, updateStage, setData, elementEvent]);
+  }, [elementRef, data, updateStage, setData, elementEvent, uid, stages]);
 
   return (
     <>
@@ -74,6 +75,7 @@ const WcDrawWrapper = (props: TWcDrawWrapper) => {
     </>
   );
 };
+
 
 export default WcDrawWrapper;
 

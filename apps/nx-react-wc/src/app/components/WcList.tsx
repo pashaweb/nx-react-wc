@@ -1,25 +1,18 @@
-import { useEffect, useState } from 'react';
-import { usePictureAnaliticsStore } from '../stores/userePicturesList';
-import WcDrawWrapper from './WcDrawWrapper';
+
+import { useStagesStore } from '../stores/stagesStoreCreator';
 
 export const WcList = () => {
-  const list = usePictureAnaliticsStore((state) => state.list);
-  const [list2, setList2] = useState(list);
-  useEffect(() => {
-    setList2(list);
-  }, [list]);
+  const { stages } = useStagesStore((state) => state);
   return (
-    <>
+    <>sta
       <h1>WcList</h1>
       <ul>
-        {list.map((item) => {
+        {stages.map((item) => {
           return (
             <li key={item.id}>
-              <img src={item.url} width="50px" />
+              <img src={item.url} width="50px" alt='stage' />
               {item.name} {item.selected ? 'selected' : ''}
-              <div>
-                <WcDrawWrapper data={item} />
-              </div>
+
             </li>
           );
         })}
