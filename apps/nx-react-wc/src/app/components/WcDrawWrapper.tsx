@@ -44,6 +44,9 @@ const WcDrawWrapper = (props: TWcDrawWrapper) => {
     function updateData() {
       if (elementRef.current && uid && stages) {
         const data = stages.find((item) => item.id === uid);
+        if (!data) {
+          return;
+        }
         setData(data);
         elementRef.current.addEventListener(
           'stage-svg-update',
