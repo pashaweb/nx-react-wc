@@ -26,7 +26,7 @@ const ShapesListItem = (props: shapesListItemProps) => {
           : `${styles['list-item']}`
       }
     >
-      x:{shape.x} y:{shape.y} {shape.selected ? 'selected' : ''}
+      x:{Math.floor(shape.x)} y:{Math.floor(shape.y)}
     </li>
   );
 };
