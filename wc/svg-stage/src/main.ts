@@ -67,13 +67,14 @@ export class StageSvg extends LitElement {
 
   onStageDtaChange() {
     this.checkOrCreateStage();
+    clearSvg(this.svgStage);
     setStageSvgBackground(this.svgStage as SVGSVGElement, {
       url: this.stageData?.url || '',
       width: this.stageData?.width || 0,
       height: this.stageData?.height || 0,
     });
 
-    clearSvg(this.svgStage);
+    
     this.initShapes();
   }
 

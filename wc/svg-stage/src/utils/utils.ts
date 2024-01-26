@@ -42,6 +42,7 @@ export const drawRectangle = (shape:TshapeItem) => {
       child.replaceWith(child.cloneNode(false));
       child.remove();
     }
+    svg.innerHTML = '';
   };
 
 
