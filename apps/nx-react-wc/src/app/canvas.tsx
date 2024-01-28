@@ -1,10 +1,10 @@
 import { useCallback, useState } from 'react';
 import styles from './app.module.css';
-import WcDrawWrapper from './components/WcDrawWrapper';
 import { TpictureAnlytics } from '@react-canvas/models';
 import { useStagesStore } from './stores/stagesStoreCreator';
 import { ShapesList } from './components/ShapesList';
-export function App() {
+import WcDrawWrapperCanvas from './components/WcDrawWrapperCanvas';
+export function Canvas() {
 
   const [selectedStage, _setSelectedStage] = useState<TpictureAnlytics | null>(null);
 
@@ -83,11 +83,11 @@ export function App() {
           </ul>
         </div>
 
-        <div>{selectedStage && <WcDrawWrapper data={selectedStage} uid={selectedStageId} />}</div>
+        <div>{selectedStage && <WcDrawWrapperCanvas data={selectedStage} uid={selectedStageId} />}</div>
       </main>
 
     </>
   );
 }
 
-export default App;
+export default Canvas;

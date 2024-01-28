@@ -1,4 +1,9 @@
-@import "../../styles.css";
+/* Your styles goes here. */
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
 
 .container {
   width: auto;
@@ -8,3 +13,64 @@
   justify-content: left;
   margin-bottom: 20px;
 }
+
+.list {
+
+  li.list-item {
+    list-style: none;
+    margin: 10px;
+    padding: 10px;
+
+
+    .list-item-link {
+      padding: 1rem;
+      border-radius: 0.5rem;
+      background-color: var(--primary-500);
+      color: var(--light-100);
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      justify-content: left;
+      gap: 1rem;
+
+      img {
+        width: var(--spacing-lg);
+        height: var(--spacing-lg);
+        border: 0.2rem solid var(--outline);
+        border-radius: 50%;
+      }
+
+      &:hover {
+        background-color: var(--primary-1000);
+      }
+    }
+
+  }
+
+  li.list-item-selected {
+    .list-item-link {
+      background-color: var(--primary-1000);
+    }
+  }
+}
+
+.list-item-shapes {
+
+  /*margin-top: var(--spacing-md);*/
+  /*margin-left: var(--spacing-md);*/
+
+
+  li.list-item {
+    list-style: none;
+    margin: var(--spacing-xs);
+    padding: var(--spacing-md);
+    border-radius: var(--spacing-md);
+    background-color: var(--outline);
+  }
+  li.list-item-selected {
+    background-color: var(--primary-400);
+  }
+
+}
+
+

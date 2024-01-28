@@ -3,7 +3,7 @@ import styles from './Page.module.css';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { TpictureAnlytics, TshapeItem } from '@react-canvas/models';
 //import 'dist/wc/svg-stage/main.js';
-import { ShapesList } from './ShapesList';
+import { ShapesList } from '../components/ShapesList';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { SvgStageReact } from '@react-svg';
 //
@@ -22,7 +22,6 @@ export const AppNew = () => {
     stages,
     setSelectedStage,
     resetSelectedStage,
-    selectedStageId,
     updateStage,
   } = useStagesStore((state) => state);
 
@@ -72,6 +71,15 @@ export const AppNew = () => {
     _setSelectedStage(newItem);
   };
 
+  const isSelected = (id: number) => {
+    let result = false;
+    if (!selectedStage) return result;
+    if (selectedStage.id === id) {
+      result = true;
+    }
+    return result;
+  };
+
   const onDrugEventHandler = (shape: TshapeItem) => {
     const { x, y, id } = shape;
 
@@ -90,40 +98,38 @@ export const AppNew = () => {
   };
 
   return (
-    <div className={styles.container}>
-      <ul>
-        {stages.map((stage) => {
-          return (
-            <li key={stage.id}>
-              <div>
-                <h1>{stage.name}</h1>
-                <div>
-                  <button onClick={() => _setSelectedStage(stage)}>
-                    setActive
-                  </button>
-                </div>
-                {stage.id === selectedStageId && selectedStage !== null ? (
-                  <ShapesList
-                    item={selectedStage}
-                    onSelected={setSelectedShape}
-                  />
-                ) : null}
-              </div>
-            </li>
-          );
-        })}
-      </ul>
+    <main className={styles.container}>
+      <div>
+          <ul className={styles.list}>
+            {stages.map((item) => {
+              return (
+                <li
+                  key={item.id}
+                  onClick={() => _setSelectedStage(item)}
+                  className={
+                    isSelected(item.id)
+                      ? `${styles['list-item']} ${styles['list-item-selected']}`
+                      : `${styles['list-item']}`
+                  }
+                >
+                  <div className={styles['list-item-link']}>
+                    <img src={item.url} width="50px" alt='sds' />
+                    {item.name} {item.selected ? 'selected' : 'ddd'}
+                  </div>
+                  {isSelected(item.id)
+                 ? <ShapesList item={item} onSelected={setSelectedShape} />
+                  : null}
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      <div>
       {selectedStage !== null ? (
         <div>
           <h1>{selectedStage.name}</h1>
           <div>
             <button onClick={() => resetSelectedStage()}>resetActive</button>
-            <div></div>
-            {/*<stage-svg*/}
-            {/*  data-event-update="stage-svg-update"*/}
-            {/*  ref={elementRef}*/}
-            {/*></stage-svg>*/}
-
             <SvgStageReact
               stageData={selectedStage}
               onUpdated={updateStage}
@@ -134,6 +140,8 @@ export const AppNew = () => {
       ) : (
         <div>no selected stage</div>
       )}
-    </div>
+      </div>
+      
+    </main>
   );
 };

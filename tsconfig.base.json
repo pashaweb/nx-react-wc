@@ -21,6 +21,7 @@
       "@react-canvas/shapes-canvas": ["shapes-canvas/index.ts"],
       "@react-svg": ["svg-stage-react/src/index.ts"],
       "@wc/svg-stage": ["dist/wc/svg-stage/main.js"],
+      "@wc/canvas-stage": ["dist/apps/shapes-canvas/main.js"],
     }
   },
   "exclude": ["node_modules", "tmp"]

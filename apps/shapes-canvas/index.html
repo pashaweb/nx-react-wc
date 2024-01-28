@@ -11,7 +11,7 @@
     </style>
   </head>
   <body>
-    <my-element></my-element>
+    <my-element data-event-update="ev-up" ></my-element>
   </body>
 
   <script>
@@ -103,7 +103,13 @@
   //   selectedShapeId: null,
   // };
   const element = document.querySelector('my-element');
-  element.pictureAnlytics = picData;
+  element.addEventListener('ev-up', (e) => {
+    console.log('ev-up', e.detail);
+    const selected = e.detail['shapes'].filter((shape) => shape.selected);
+    console.log('selected', JSON.stringify(selected));
+
+  });
+  element.stageData = picData;
 
 
   </script>

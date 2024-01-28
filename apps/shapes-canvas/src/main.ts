@@ -21,10 +21,8 @@ export class MyElement extends LitElement {
   @property()
   ctx: CanvasRenderingContext2D | undefined;
 
-  @property() svg:SVGSVGElement;
-
-  @property({ type: Object, attribute: 'picture-anlytics' })
-  pictureAnlytics!: TpictureAnlytics;
+  @property()
+  stageData!: TpictureAnlytics;
 
   @property()
   offsetValues: OffsetValues = { offsetX: 0, offsetY: 0 };
@@ -32,16 +30,18 @@ export class MyElement extends LitElement {
   @property()
   drugSape:boolean = false;
 
+  @property({ type: String, attribute: 'data-event-update' })
+  updateEventName: string = 'update-stage-data';
+
   drowAll() {
-    console.log('drowPictureAnlytics');
-    if (this.pictureAnlytics) {
-      const { width, height } = this.pictureAnlytics;
+    if (this.stageData) {
+      const { width, height } = this.stageData;
 
       this.canvas?.setAttribute('width', width.toString());
       this.canvas?.setAttribute('height', height.toString());
       this.ctx?.clearRect(0, 0, width, height);
-      this.drowBackgroundImg(this.pictureAnlytics.url);
-      this.pictureAnlytics.shapes.forEach(shape => {
+      this.drowBackgroundImg(this.stageData.url);
+      this.stageData.shapes.forEach(shape => {
           this.drowShape(shape);
         });
     }
@@ -62,7 +62,7 @@ export class MyElement extends LitElement {
 
   onMouseDown = (e: MouseEvent) => {
     const { x, y } = this.calculateMousePosition(e);
-    const shaps = [...this.pictureAnlytics.shapes];
+    const shaps = [...this.stageData.shapes];
     shaps.reverse();
     let selectedShapeId = null;
     for (let i = 0; i < shaps.length; i++) {
@@ -73,19 +73,22 @@ export class MyElement extends LitElement {
       }
     };
     if(selectedShapeId!==null) {
-      this.pictureAnlytics.selectedShapeId = selectedShapeId;
+      this.stageData.selectedShapeId = selectedShapeId;
+      for (let i = 0; i < shaps.length; i++) {
+        const shape = shaps[i];
+        shape.selected = shape.id === selectedShapeId;
+      }
+
       this.drugSape = true;
       this.drowAll();
+      this.eventDispatch();
     }
-
-
-    console.log('onMouseDown', x, y);
   };
 
   onMouseMove = (e: MouseEvent) => {
     const { x, y } = this.calculateMousePosition(e);
     if(this.drugSape) {
-      const shape = this.pictureAnlytics.shapes.find(shape => shape.id === this.pictureAnlytics.selectedShapeId);
+      const shape = this.stageData.shapes.find(shape => shape.id === this.stageData.selectedShapeId);
       if(shape && shape.type === 'rectangle') {
         shape.x = x - shape.width / 2;
         shape.y = y - shape.height / 2;
@@ -101,17 +104,25 @@ export class MyElement extends LitElement {
   onMouseUp = () => {
 
     if(this.drugSape) {
-      console.log('onMouseUp', `update-picture-anlytics-${this.uid}`,this.pictureAnlytics.shapes );
-
-      this.dispatchEvent(new CustomEvent(`update-picture-anlytics-${this.uid}`, {
-        detail: this.pictureAnlytics,
-        bubbles: true,
-        composed: true
-      }));
+      for (let i = 0; i < this.stageData.shapes.length; i++) {
+        const shape = this.stageData.shapes[i];
+        shape.selected = false;
+      }
+      this.stageData.selectedShapeId = null;
+      this.eventDispatch();
       this.drugSape = false;
     }
 
   };
+
+  private eventDispatch() {
+    const event = new CustomEvent(this.updateEventName, {
+      detail: this.stageData,
+      bubbles: true,
+      composed: true,
+    });
+    this.dispatchEvent(event);
+  }
 
   calulateCanvasOffset() {
     const canvasOffset = this.canvas?.getBoundingClientRect();
@@ -158,13 +169,6 @@ export class MyElement extends LitElement {
   override firstUpdated() {
     this.canvas = this.shadowRoot?.getElementById(`canvas-${this.uid}`) as HTMLCanvasElement;
     this.ctx = this.canvas?.getContext('2d') as CanvasRenderingContext2D;
-
-    this.svg = this.shadowRoot?.querySelector('svg') as SVGSVGElement;
-    this.svg.addEventListener('mousemove', this.svgMouseMove);
-    this.svg.querySelector('circle')?.addEventListener('mousedown', this.svgMouseDown);
-
-
-    console.log(this.canvas, "this.ctx");
     this.canvas?.addEventListener('mousedown', this.onMouseDown);
     this.canvas?.addEventListener('mousemove', this.onMouseMove);
     this.canvas?.addEventListener('mouseup', this.onMouseUp);
@@ -172,7 +176,7 @@ export class MyElement extends LitElement {
   }
 
   override updated(changedProperties: { has: (arg0: string) => boolean; }) {
-    if(changedProperties.has('pictureAnlytics')) {
+    if(changedProperties.has('stageData')) {
       this.drowAll();
     }
   }
@@ -195,40 +199,6 @@ export class MyElement extends LitElement {
     }
   }
 
-  private currentSvgElement: SVGElement | null = null;
-
-
-
-  svgMouseDown = (e: MouseEvent) => {
-    this.currentSvgElement = e.target as SVGElement;
-    console.log('svgMouseDown', e.target);
-    //this.currentSvgElement = e.target as SVGElement;
-  }
-
-  mousePos(event: MouseEvent, svg: SVGSVGElement) {
-    let p = svg.createSVGPoint();
-    p.x = event.clientX;
-    p.y = event.clientY;
-    const matrix = svg.getScreenCTM();
-    if (matrix){
-      p = p.matrixTransform(matrix.inverse());
-    }
-
-    return {
-      x: p.x,
-      y: p.y
-    }
-  }
-
-  svgMouseMove = (e: MouseEvent) => {
-    if(this.currentSvgElement) {
-      const pos = this.mousePos(e, this.svg);
-      this.currentSvgElement.setAttribute('cx', pos.x.toString());
-      this.currentSvgElement.setAttribute('cy', pos.y.toString());
-    }
-    //console.log('svgMouseMove', e.target);
-    //this.currentSvgElement = e.target as SVGElement;
-  }
 
 
   override render() {
@@ -244,12 +214,7 @@ export class MyElement extends LitElement {
       }
     </style>
 
-    <h4>Try to move shapes ${this.uid}</h4>
-    <svg width="300" height="500">
-    <rect x="50" y="50" width="200" height="200" style="fill:rgb(0,0,255);stroke-width:3;stroke:rgb(0,0,0)" />
-
-      <circle cx="150" cy="150" r="100" stroke="black" stroke-width="3" fill="red" />
-    </svg>
+    <h4>Try to move shapes ${this.uid} This IS canvas</h4>
     <canvas id="canvas-${this.uid}" width=300 height=300></canvas>
     `;
   }
