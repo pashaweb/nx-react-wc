@@ -41,6 +41,13 @@ export class MyElement extends LitElement {
       this.canvas?.setAttribute('height', height.toString());
       this.ctx?.clearRect(0, 0, width, height);
       this.drowBackgroundImg(this.stageData.url);
+      const selectedShape = this.stageData.shapes.find(shape => shape.id === this.stageData.selectedShapeId);
+      const shapes = [...this.stageData.shapes];
+      if(selectedShape) {
+        shapes.splice(shapes.indexOf(selectedShape), 1);
+        shapes.push(selectedShape);
+      }
+      
       this.stageData.shapes.forEach(shape => {
           this.drowShape(shape);
         });
@@ -111,6 +118,7 @@ export class MyElement extends LitElement {
       this.stageData.selectedShapeId = null;
       this.eventDispatch();
       this.drugSape = false;
+      this.drowAll();
     }
 
   };
@@ -135,7 +143,7 @@ export class MyElement extends LitElement {
   drowrectangle(shape: { type: "rectangle"; } & Trectengele & Tposition & { id: number; color: string; selected: boolean; }) {
     if (this.ctx) {
       this.ctx.fillStyle = shape.color;
-      this.ctx.strokeStyle = 'black';
+      this.ctx.strokeStyle = shape.selected ? 'red' : 'black';;
       this.ctx.beginPath();
       this.ctx.lineWidth = 5;
       this.ctx.rect(shape.x, shape.y, shape.width, shape.height);
@@ -147,7 +155,7 @@ export class MyElement extends LitElement {
   drowCircle(shape: { type: "circle"; } & Tcircle & Tposition & { id: number; color: string; selected: boolean; }) {
     if (this.ctx) {
       this.ctx.fillStyle = shape.color;
-      this.ctx.strokeStyle = 'black';
+      this.ctx.strokeStyle = shape.selected ? 'red' : 'black';
       this.ctx.beginPath();
       this.ctx.arc(shape.x, shape.y, shape.radius, 0, 2 * Math.PI);
       this.ctx.fill();
