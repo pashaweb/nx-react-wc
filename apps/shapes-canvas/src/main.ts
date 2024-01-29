@@ -41,14 +41,12 @@ export class MyElement extends LitElement {
       this.canvas?.setAttribute('height', height.toString());
       this.ctx?.clearRect(0, 0, width, height);
       this.drowBackgroundImg(this.stageData.url);
-      const selectedShape = this.stageData.shapes.find(shape => shape.id === this.stageData.selectedShapeId);
-      const shapes = [...this.stageData.shapes];
-      if(selectedShape) {
-        shapes.splice(shapes.indexOf(selectedShape), 1);
-        shapes.push(selectedShape);
+      const selectedShape = this.stageData.shapes.find(shape => shape.selected);
+      let shapes = this.stageData.shapes.filter(shape => !shape.selected);
+      if(selectedShape){
+        shapes = [...shapes, selectedShape];
       }
-      
-      this.stageData.shapes.forEach(shape => {
+      shapes.forEach(shape => {
           this.drowShape(shape);
         });
     }
@@ -69,11 +67,18 @@ export class MyElement extends LitElement {
 
   onMouseDown = (e: MouseEvent) => {
     const { x, y } = this.calculateMousePosition(e);
-    const shaps = [...this.stageData.shapes];
-    shaps.reverse();
+    let shapes = [...this.stageData.shapes];
+    const selectedShape = shapes.find(shape => shape.selected);
+    if(selectedShape) {
+      shapes = shapes.filter(shape => shape.id !== selectedShape.id);
+      shapes = [...shapes, selectedShape];
+    }
+
+    shapes.reverse();
     let selectedShapeId = null;
-    for (let i = 0; i < shaps.length; i++) {
-      const shape = shaps[i];
+
+    for (let i = 0; i < shapes.length; i++) {
+      const shape = shapes[i];
       if (this.ifCoordinatesInShape(x, y, shape)) {
         selectedShapeId = shape.id;
         break;
@@ -81,8 +86,8 @@ export class MyElement extends LitElement {
     };
     if(selectedShapeId!==null) {
       this.stageData.selectedShapeId = selectedShapeId;
-      for (let i = 0; i < shaps.length; i++) {
-        const shape = shaps[i];
+      for (let i = 0; i < shapes.length; i++) {
+        const shape = shapes[i];
         shape.selected = shape.id === selectedShapeId;
       }
 
