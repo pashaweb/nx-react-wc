@@ -126,6 +126,9 @@ export function SvgStageReact(props: SvgStageReactProps) {
           preserveAspectRatio="none"
         />
         {shapes.map((shape) => {
+          if (shape.selected) {
+            return null
+          }
           if (shape.type === 'rectangle') {
             return (
               <rect
@@ -137,8 +140,8 @@ export function SvgStageReact(props: SvgStageReactProps) {
                 width={shape.width}
                 height={shape.height}
                 fill={shape.color}
-                stroke={shape.selected ? 'red' : 'black'}
-                strokeWidth={shape.selected ? 2 : 1}
+                stroke='black'
+                strokeWidth={1}
               />
             );
           }
@@ -152,13 +155,51 @@ export function SvgStageReact(props: SvgStageReactProps) {
                 cy={shape.y}
                 r={shape.radius}
                 fill={shape.color}
-                stroke={shape.selected ? 'red' : 'black'}
-                strokeWidth={shape.selected ? 2 : 1}
+                stroke='black'
+                strokeWidth={1}
               />
             );
           }
           return null;
         })}
+        {
+          shapes
+            .filter((shape) => shape.selected)
+            .map((shape) => {
+              if (shape.type === 'rectangle') {
+                return (
+                  <rect
+                    key={shape.id}
+                    onMouseDown={() => selectShape(shape)}
+                    onMouseUp={() => realiseShape()}
+                    x={shape.x}
+                    y={shape.y}
+                    width={shape.width}
+                    height={shape.height}
+                    fill={shape.color}
+                    stroke='red'
+                    strokeWidth={2}
+                  />
+                );
+              }
+              if (shape.type === 'circle') {
+                return (
+                  <circle
+                    key={shape.id}
+                    onMouseDown={() => selectShape(shape)}
+                    onMouseUp={() => realiseShape()}
+                    cx={shape.x}
+                    cy={shape.y}
+                    r={shape.radius}
+                    fill={shape.color}
+                    stroke='red'
+                    strokeWidth={2}
+                  />
+                );
+              }
+              return null;
+            })
+        }
       </svg>
 
       <pre>{JSON.stringify(shapeAction, null, 2)}</pre>
